@@ -18,13 +18,11 @@ class Proxy
   def initialize(target_object)
     @object = target_object
     @messages = []
-    @times_called = Hash.new(0)
   end
 
   def method_missing(method_name, *args, &block)
     if @object.respond_to?(method_name)
       @messages << method_name
-      @times_called[method_name] += 1 
       @object.send(method_name, *args)
     else
       super(method_name, *args, &block)
@@ -32,13 +30,12 @@ class Proxy
   end
 
   def called?(method_name)
-    @messages.include?(method_name)
+    @messages.include? method_name
   end
 
   def number_of_times_called(method_name)
-    @times_called[method_name]
+    @messages.count method_name
   end
-
 end
 
 # The proxy object should pass the following Koan:
